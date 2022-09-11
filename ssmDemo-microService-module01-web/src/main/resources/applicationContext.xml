@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- Spring的配置文件,这里主要配置业务和逻辑有关的-->
+    <!-- 数据源(连接池),事务控制,外部数据库配置文件引入,自动扫表包,AOP的配置-->
+
+    <!-- 除了controller的注解  其他全部扫描-->
+    <context:component-scan base-package="com.jxonline.sword">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+    </context:component-scan>
+
+
+
+    <bean id="propertyPlaceholderConfigurerJDBC" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+        <list>
+            <value>classpath:*.properties</value>
+        </list>
+    </property>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+
+    <!-- 配置数据源 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="username" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="initialSize" value="${jdbc.initialSize}"/>
+        <property name="maxActive" value="${jdbc.maxActive}"/>
+        <property name="maxWait" value="${jdbc.maxWait}"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000" />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+    </bean>
+
+
+    <!-- ================================================================================================================== -->
+
+    <!-- 配置和mybatis的整合 -->
+    <!-- 配置SqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 指定Mybatis全局配置文件的位置 -->
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+        <!-- 指定mybatis的mapper文件的位置-->
+        <property name="mapperLocations" value="classpath:/mapper/*Mapper.xml"/>
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <!-- 配置扫描器,将mybatis接口的实现加入到spring容器中  即扫描dao注册到spring中-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 扫描所有dao接口 -->
+        <property name="basePackage" value="com.xsjxonline.sword"></property>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+
+<!-- =============================================================================================================== -->
+    <!-- 事务控制的配置-->
+    <bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!-- 要想管理事务  需要控制住数据源-->
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <!-- 开启基于注解的事务 或者使用xml形式来配置事务(主要用此形式来配置事务)-->
+    <aop:config>
+        <!-- AOP的思想 来配置事务 切入点控制事务-->
+        <!-- 事务切点声明在Service级别 -->
+        <aop:pointcut expression="execution(* com.jxonline.sword.service..*(..))" id="txPoint"/>
+        <!-- 配置事务的增强 -->
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPoint"/>
+    </aop:config>
+
+    <!-- 配置事务的增强:声明事务的范围-->
+    <tx:advice id="txAdvice" transaction-manager="dataSourceTransactionManager">
+        <tx:attributes>
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="insert*" propagation="REQUIRED"/>
+            <tx:method name="create*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="remove*" propagation="REQUIRED"/>
+            <!--声明只读-->
+            <tx:method name="get*" propagation="REQUIRED" />
+            <tx:method name="select*" propagation="REQUIRED" />
+            <tx:method name="find*" propagation="REQUIRED" />
+            <tx:method name="*List" propagation="REQUIRED" />
+            <tx:method name="*" propagation="REQUIRED" />
+            <!-- 触发进行回滚的 Exception -->
+            <tx:method name="*" rollback-for="Exception" />
+        </tx:attributes>
+    </tx:advice>
+    <!-- tx:annotation 自动配置事务，注意这个标签必需放在tx:advice下面，否则不起作用 -->
+    <tx:annotation-driven transaction-manager="dataSourceTransactionManager" proxy-target-class="true"/>
+
+    <!-- redis配置 -->
+<!--    <import resource="classpath:spring-redis.xml"/>-->
+
+    <!-- Spring配置文件的重点,数据源(连接池),与mybatis整合,事务控制-->
+</beans>

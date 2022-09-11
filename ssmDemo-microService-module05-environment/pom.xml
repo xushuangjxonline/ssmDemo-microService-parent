@@ -26,13 +26,7 @@
             <artifactId>spring-orm</artifactId>
             <version>5.3.1</version>
         </dependency>
-
-        <!-- 日志 -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
-        </dependency>
+        
 
         <!-- Spring5 和 Thymeleaf 整合包-->
         <dependency>
