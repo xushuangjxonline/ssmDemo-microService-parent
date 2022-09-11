@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 
-<mapper namespace="com.jxonline.sword.mapper.UserInfoMapper">
+<mapper namespace="com.jxonline.sword.mapper.TestMapper">
     <cache readOnly="true" eviction="FIFO" size="512" flushInterval="600000"></cache>
 
     <resultMap id="userInfoModel" type="com.jxonline.sword.entity.UserInfoModel">

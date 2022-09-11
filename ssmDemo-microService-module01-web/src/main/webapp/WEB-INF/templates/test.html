@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xml:th="http://www.thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>测试页</title>
+</head>
+<body>
+    <tr th:each = "list:${list}">
+        <td th:text = "${list.user_id}"></td>
+        <td th:text = "${list.user_name}"></td>
+        <td th:text = "${list.user_gender}"></td>
+        <td th:text = "${list.user_age}"></td>
+        <td th:text = "${list.user_skill}"></td>
+        <td th:text = "${list.user_position}"></td>
+        <td th:text = "${list.user_stats}"></td>
+        <td th:text = "${list.user_energy}"></td>
+        <td th:text = "${list.lastLoginTime}"></td>
+        <td th:text = "${list.username}"></td>
+        <td th:text = "${list.password}"></td>
+        <td th:text = "${list.user_power}"></td>
+        <td th:text = "${list.user_sect}"></td>
+    </tr>
+
+</body>
+</html>

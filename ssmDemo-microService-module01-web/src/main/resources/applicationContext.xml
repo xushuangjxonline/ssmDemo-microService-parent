@@ -16,9 +16,9 @@
     <!-- Spring的配置文件,这里主要配置业务和逻辑有关的-->
     <!-- 数据源(连接池),事务控制,外部数据库配置文件引入,自动扫表包,AOP的配置-->
 
-    <!-- 除了controller的注解  其他全部扫描-->
-    <context:component-scan base-package="com.jxonline.sword">
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+    <!-- 只扫描service-->
+    <context:component-scan base-package="com.jxonline">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
     </context:component-scan>
 
 
@@ -26,7 +26,7 @@
     <bean id="propertyPlaceholderConfigurerJDBC" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="locations">
         <list>
-            <value>classpath:*.properties</value>
+            <value>classpath:jdbc.properties</value>
         </list>
     </property>
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
@@ -57,15 +57,15 @@
     <!-- 配置SqlSessionFactory -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <!-- 指定Mybatis全局配置文件的位置 -->
-        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
         <!-- 指定mybatis的mapper文件的位置-->
         <property name="mapperLocations" value="classpath:/mapper/*Mapper.xml"/>
-        <property name="dataSource" ref="dataSource"></property>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
     <!-- 配置扫描器,将mybatis接口的实现加入到spring容器中  即扫描dao注册到spring中-->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <!-- 扫描所有dao接口 -->
-        <property name="basePackage" value="com.xsjxonline.sword"></property>
+        <property name="basePackage" value="com.jxonline.sword.mapper"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
 
