@@ -4,22 +4,100 @@
     <meta charset="UTF-8">
     <title>测试页</title>
 </head>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <script src="js/bootstrap.js"></script>
 <body>
-    <tr th:each = "list:${list}">
-        <td th:text = "${list.user_id}"></td>
-        <td th:text = "${list.user_name}"></td>
-        <td th:text = "${list.user_gender}"></td>
-        <td th:text = "${list.user_age}"></td>
-        <td th:text = "${list.user_skill}"></td>
-        <td th:text = "${list.user_position}"></td>
-        <td th:text = "${list.user_stats}"></td>
-        <td th:text = "${list.user_energy}"></td>
-        <td th:text = "${list.lastLoginTime}"></td>
-        <td th:text = "${list.username}"></td>
-        <td th:text = "${list.password}"></td>
-        <td th:text = "${list.user_power}"></td>
-        <td th:text = "${list.user_sect}"></td>
-    </tr>
+    <div>
+        <table class="table table-striped">
+            <tr>
+                <th>id</th>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>年龄</th>
+                <th>技能</th>
+                <th>职位</th>
+                <th>战斗力</th>
+                <th>体力</th>
+                <th>最后登录时间</th>
+                <th>账号</th>
+                <th>密码</th>
+                <th>所属门派</th>
+            </tr>
+
+            <tr th:each = "list:${list}">
+                <th th:text = "${list.user_id}"></th>
+                <th th:text = "${list.user_name}"></th>
+                <th th:switch = "${list.user_gender}">
+                    <p th:case="1">男</p>
+                    <p th:case="2">女</p>
+                    <p th:case="*">其他</p>
+                </th>
+                <th th:text = "${list.user_age}"></th>
+                <th th:text = "${list.user_skill}"></th>
+                <th th:switch = "${list.user_position}">
+                    <p th:case="1">掌门</p>
+                    <p th:case="2">长老</p>
+                    <p th:case="3">堂主</p>
+                    <p th:case="4">帮众</p>
+                    <p th:case="*">其他</p>
+                </th>
+                <th th:text = "${list.user_stats}"></th>
+                <th th:text = "${list.user_energy}"></th>
+                <th th:text = "${#dates.format(list.lastLoginTime,'yyyy-MM-dd HH:mm')}"></th>
+                <th th:text = "${list.username}"></th>
+                <th th:text = "${list.password}"></th>
+                <th th:switch = "${list.user_sect}">
+                    <p th:case="1">万花</p>
+                    <p th:case="2">七秀</p>
+                    <p th:case="3">天策</p>
+                    <p th:case="4">少林</p>
+                    <p th:case="5">纯阳</p>
+                    <p th:case="*">其他</p>
+                </th>
+            </tr>
+        </table>
+    </div>
+
+    <div>
+        <h2>表单+js test模块</h2>
+            <p>用户名:<input type="text" name="username" id="username"></p>
+            <p>密码:<input type="password" name="password" id="password"></p>
+            <p>
+                <input type="button" value="登录" onclick=doLogin();>
+                <input type="button" value="忘记密码" onclick="findPassword();">
+            </p>
+
+
+    </div>
 
 </body>
+<script th:inline="javascript">
+    const userInfo =[[${list}]];   //thymeleaf直接接收后台数据;
+
+
+    function doLogin() {
+        const username = $("#username").val();
+        const password = $("#password").val();
+        const param = {"username":username , "password":password};
+        const jsonPara = JSON.stringify(param);
+
+        $.ajax({
+            url:"doLogin",
+            type:"post",
+            data:jsonPara,
+            dataType:"json",
+            contentType:"application/json",
+            success:function(data){
+                if(data.code == 200){
+                    alert("登陆成功!!!");
+                    console.log(data.data)
+                }else{
+                    alert("登陆失败!!!")
+                }
+            }
+        })
+    }
+</script>
+
 </html>

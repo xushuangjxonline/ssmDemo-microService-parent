@@ -21,7 +21,7 @@ public class UserInfoModel implements Serializable {
     private String username;
     private String password;
     private int user_power;
-    private int user_sect;
+    private int user_sect ;
 
     @Override
     public String toString() {

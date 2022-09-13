@@ -13,5 +13,9 @@ import java.util.List;
 
 public interface TestService {
 
+    //查询userinfo表的数据
     List<UserInfoModel> selectUserInfoModel();
+
+    //简单的ajax登录 测试thymeleaf表单
+    UserInfoModel doLogin(String username,String password);
 }

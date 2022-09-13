@@ -26,5 +26,11 @@
         select * from sword_userinfo
     </select>
 
+    <select id="doLogin"  resultMap="userInfoModel" useCache="true">
+        select * from sword_userinfo where username = #{username} and password = #{password}
+     </select>
+
+
+
 
 </mapper>

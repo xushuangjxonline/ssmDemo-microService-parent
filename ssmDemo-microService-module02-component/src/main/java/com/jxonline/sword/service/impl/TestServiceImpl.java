@@ -27,6 +27,14 @@ public class TestServiceImpl implements TestService {
         return testMapper.selectUserInfoModel();
     }
 
+    @Override
+    public UserInfoModel doLogin(String username, String password) {
+        List<UserInfoModel> list = testMapper.doLogin(username,password);
+        if(list != null && list.size() > 0){
+            return list.get(0);
+        }
+        return null;
+    }
 
 
 }
