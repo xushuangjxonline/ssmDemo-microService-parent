@@ -17,6 +17,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {Exception.class})
     @ResponseBody
     public <T> Result<T> exceptionHandler(Exception e){
+        e.printStackTrace();
         //先判断拦截到的异常是不是自定义异常类型
         if(e instanceof AppException){
             AppException appException = (AppException)e;
