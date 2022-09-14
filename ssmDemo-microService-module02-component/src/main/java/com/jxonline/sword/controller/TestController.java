@@ -3,8 +3,10 @@ package com.jxonline.sword.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jxonline.sword.constant.ResultCodeEnum;
 import com.jxonline.sword.entity.UserInfoModel;
 import com.jxonline.sword.service.api.TestService;
+import com.jxonline.sword.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/")
 public class TestController {
+
 
     @Autowired
     TestService testServiceimpl;
@@ -50,24 +53,23 @@ public class TestController {
 
     @PostMapping("/doLogin")
     @ResponseBody
-    public Map<String , Object> doLogin(@RequestBody Object jsonPara, HttpSession session)throws Exception{
+    public Result doLogin(@RequestBody Object jsonPara, HttpSession session)throws Exception{
+
         ObjectMapper mapper = new ObjectMapper();
-        Map<String , Object> resultMap = new HashMap();
         Map map =mapper.readValue(mapper.writeValueAsString(jsonPara),Map.class);
+
         String username = map.get("username").toString();
         String password = map.get("password").toString();
+
         if(testServiceimpl.doLogin(username,password) != null){
             UserInfoModel userInfo = testServiceimpl.doLogin(username,password);
             session.setAttribute("userInfo",userInfo);
-            resultMap.put("code",200);
-            resultMap.put("message","登录成功");
-            resultMap.put("data",userInfo);
-            return resultMap;
-        }else {
-            resultMap.put("code",400);
-            resultMap.put("message","登陆失败");
-            resultMap.put("data",null);
-            return resultMap;
+            return Result.success(userInfo);
+        }else if (testServiceimpl.isHaveAccount(username)){
+            return Result.error(ResultCodeEnum.USER_LOGIN_ERREOR);
+        }else if("1111".equals(username)){
+            int q = 1/0;
         }
+        return Result.error(ResultCodeEnum.USER_NOT_EXIST_ERROE);
     }
 }

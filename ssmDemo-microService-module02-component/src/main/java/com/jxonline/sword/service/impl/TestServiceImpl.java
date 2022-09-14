@@ -36,5 +36,10 @@ public class TestServiceImpl implements TestService {
         return null;
     }
 
+    @Override
+    public Boolean isHaveAccount(String username) {
+        return testMapper.isHaveAccount(username);
+    }
+
 
 }

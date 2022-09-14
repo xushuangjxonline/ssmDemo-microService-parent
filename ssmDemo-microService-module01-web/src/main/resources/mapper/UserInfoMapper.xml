@@ -30,6 +30,10 @@
         select * from sword_userinfo where username = #{username} and password = #{password}
      </select>
 
+    <select id="isHaveAccount" resultType="java.lang.Boolean" useCache="true">
+        select count(*) from sword_userinfo where username = #{username};
+    </select>
+
 
 
 
