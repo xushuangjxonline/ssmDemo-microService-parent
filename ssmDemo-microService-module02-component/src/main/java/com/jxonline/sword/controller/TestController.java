@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jxonline.sword.constant.ResultCodeEnum;
 import com.jxonline.sword.entity.UserInfoModel;
 import com.jxonline.sword.service.api.TestService;
+import com.jxonline.sword.util.JsonUtil;
 import com.jxonline.sword.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,7 +23,7 @@ import java.util.Map;
  * @date 2022/9/11
  **/
 
-@Controller
+@RestController
 @RequestMapping("/")
 public class TestController {
 
@@ -31,32 +32,26 @@ public class TestController {
     TestService testServiceimpl;
 
     @GetMapping("/showList")
-    public  ModelAndView testTest(HttpSession session){
+    public ModelAndView testTest(){
         ModelAndView modelAndView = new ModelAndView();
         List<UserInfoModel> list = testServiceimpl.selectUserInfoModel();
         UserInfoModel user = list.get(0);
         modelAndView.addObject("list",list);
         modelAndView.addObject("user",user);
         modelAndView.setViewName("test");
-        session.setAttribute("list",list);
         return modelAndView;
     }
 
     @GetMapping("/getJson")
-    @ResponseBody
-    public  String getJson() throws JsonProcessingException {
+    public String getJson(){
         List<UserInfoModel> list = testServiceimpl.selectUserInfoModel();
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonStr = mapper.writeValueAsString(list);
-        return jsonStr;
+        return Result.success(list);
     }
 
     @PostMapping("/doLogin")
-    @ResponseBody
-    public Result doLogin(@RequestBody Object jsonPara, HttpSession session)throws Exception{
+    public String doLogin(@RequestBody String jsonPara, HttpSession session){
 
-        ObjectMapper mapper = new ObjectMapper();
-        Map map =mapper.readValue(mapper.writeValueAsString(jsonPara),Map.class);
+        Map map = JsonUtil.jsonStr2Map(jsonPara,Map.class);
 
         String username = map.get("username").toString();
         String password = map.get("password").toString();

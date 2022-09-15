@@ -33,6 +33,7 @@ public class MD5Util {
 
 
         //执行加密
+        assert messageDigest != null;
         byte[] output = messageDigest.digest(input);
 
 
@@ -41,10 +42,9 @@ public class MD5Util {
         BigInteger bigInteger = new BigInteger(signum , output);
 
         //按照16进制将bigInteger的值转换为字符串
-        String encoded = bigInteger.toString(16).toUpperCase();
 
 
-        return encoded;
+        return bigInteger.toString(16).toUpperCase();
     }
 
 }

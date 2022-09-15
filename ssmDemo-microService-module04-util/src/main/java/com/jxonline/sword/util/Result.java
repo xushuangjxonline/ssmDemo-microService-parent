@@ -21,34 +21,35 @@ public class Result<T> {
     private T data;
 
 
-    public static <T>Result<T> putResultMap(ResultCodeEnum resultCodeEnum,T data){
-        return new Result(
+    public static <T> String putResultMap(ResultCodeEnum resultCodeEnum, T data){
+        return JsonUtil.object2JsonStr(new Result<T>(
                 resultCodeEnum.getCode(),
                 resultCodeEnum.getMessage(),
                 data
-                );
+        ));
     }
 
     //请求成功的方法
-    public static  <T>Result<T> success(T data){
-        return new Result(200,"请求成功",data);
+    public static  <T> String success(T data){
+        return JsonUtil.object2JsonStr(new Result<T>(200,"请求成功",data));
     }
 
     //请求失败的方法
-    public static  <T>Result<T> fail(){
-        return new Result(400,"请求失败",null);
+    public static  <T> String fail(){
+        return JsonUtil.object2JsonStr(new Result<T>(200,"请求成功",null));
     }
 
     //异常的结果集
-    public static <T>Result<T> error(ResultCodeEnum resultCodeEnum){
-        return new Result(
+    public static <T> String error(ResultCodeEnum resultCodeEnum){
+        return JsonUtil.object2JsonStr(new Result<T>(
                 resultCodeEnum.getCode(),
                 resultCodeEnum.getMessage(),
-                null);
+                null
+        ));
     }
 
-    public static <T>Result<T> error(int code ,String msg){
-        return new Result(code,msg,null);
+    public static <T> String error(int code ,String msg){
+        return JsonUtil.object2JsonStr(new Result<T>(code,msg,null));
     }
 
 
