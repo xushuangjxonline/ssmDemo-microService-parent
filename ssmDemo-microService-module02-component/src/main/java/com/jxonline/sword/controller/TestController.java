@@ -1,20 +1,17 @@
 package com.jxonline.sword.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jxonline.sword.constant.ResultCodeEnum;
 import com.jxonline.sword.entity.UserInfoModel;
 import com.jxonline.sword.service.api.TestService;
 import com.jxonline.sword.util.JsonUtil;
 import com.jxonline.sword.util.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +25,11 @@ import java.util.Map;
 public class TestController {
 
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestController.class);
+
     @Autowired
     TestService testServiceimpl;
+
 
     @GetMapping("/showList")
     public ModelAndView testTest(){
@@ -39,6 +39,9 @@ public class TestController {
         modelAndView.addObject("list",list);
         modelAndView.addObject("user",user);
         modelAndView.setViewName("test");
+        if(LOGGER.isDebugEnabled()){
+            LOGGER.info("该方法调用 {}" ,testServiceimpl);
+        }
         return modelAndView;
     }
 
