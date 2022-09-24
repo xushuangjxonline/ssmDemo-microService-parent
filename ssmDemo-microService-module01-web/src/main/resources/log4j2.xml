@@ -13,7 +13,7 @@
         <!-- 输出控制台日志的配置 -->
         <Console name="console" target="SYSTEM_OUT">
             <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
-            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             <!-- 输出日志的格式 -->
             <!-- 格式化输出：%date表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符-->
             <!-- %logger{36} 表示 Logger 名字最长36个字符 -->

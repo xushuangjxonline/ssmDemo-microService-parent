@@ -6,10 +6,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +20,9 @@ import java.util.Map;
  **/
 public class JsonUtil {
 
-    public static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtil.class);
+
 
     static {
         //忽略字段不匹配的错误
@@ -101,7 +103,7 @@ public class JsonUtil {
         try {
             t = objectMapper.readValue(jsonStr, new TypeReference<T[]>() {});
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("IOException",e);
         }
         return t;
     }
@@ -116,14 +118,14 @@ public class JsonUtil {
         try {
             jsonNode = objectMapper.readTree(jsonStr);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("IOException",e);
         }
         return jsonNode;
     }
 
 
     /**
-     * java bean 或者 Map 或者 JsonNode 转json字符串
+     * java bean 或者 Map 或者 JsonNode 转json字符串(json的序列化)
      * @param obj
      * @return
      */
@@ -132,7 +134,7 @@ public class JsonUtil {
         try {
             json = objectMapper.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            LOGGER.error("JsonProcessingException",e);
         }
         return json;
     }
@@ -150,7 +152,7 @@ public class JsonUtil {
             String jsonStr = objectMapper.writeValueAsString(obj);
             jsonNode = objectMapper.readTree(jsonStr);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("IOException",e);
         }
         return jsonNode;
     }

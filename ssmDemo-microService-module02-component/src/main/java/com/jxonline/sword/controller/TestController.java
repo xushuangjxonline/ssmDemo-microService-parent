@@ -1,5 +1,6 @@
 package com.jxonline.sword.controller;
 
+import com.jxonline.sword.annotation.MethodLog;
 import com.jxonline.sword.constant.ResultCodeEnum;
 import com.jxonline.sword.entity.UserInfoModel;
 import com.jxonline.sword.service.api.TestService;
@@ -8,6 +9,7 @@ import com.jxonline.sword.util.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,6 +22,7 @@ import java.util.Map;
  * @date 2022/9/11
  **/
 
+@EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 @RestController
 @RequestMapping("/")
 public class TestController {
@@ -31,8 +34,9 @@ public class TestController {
     TestService testServiceimpl;
 
 
+    @MethodLog
     @GetMapping("/showList")
-    public ModelAndView testTest(){
+    public ModelAndView Test(){
         ModelAndView modelAndView = new ModelAndView();
         List<UserInfoModel> list = testServiceimpl.selectUserInfoModel();
         UserInfoModel user = list.get(0);
@@ -45,12 +49,14 @@ public class TestController {
         return modelAndView;
     }
 
+    @MethodLog
     @GetMapping("/getJson")
     public String getJson(){
         List<UserInfoModel> list = testServiceimpl.selectUserInfoModel();
         return Result.success(list);
     }
 
+    @MethodLog
     @PostMapping("/doLogin")
     public String doLogin(@RequestBody String jsonPara, HttpSession session){
 
